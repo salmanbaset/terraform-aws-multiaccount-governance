@@ -1,0 +1,54 @@
+
+# Data source to fetch the Organization Root ID, which is the parent of the first-level OUs
+data "aws_organizations_organization" "current" {}
+
+# Create the Organizational Unit - GovernanceOU
+resource "aws_organizations_organizational_unit" "governance_ou" {
+  name      = "GovernanceOU"
+  parent_id = data.aws_organizations_organization.current.roots[0].id # Assigns the OU to the root
+
+  # Optional: Add tags
+  tags = {
+    Environment = "Governance"
+  }
+}
+
+# Output the new Governance OU ID
+output "organizational_unit_id" {
+  value = aws_organizations_organizational_unit.governance_ou.id
+}
+
+
+# Create the Organizational Unit - SecurityOU
+resource "aws_organizations_organizational_unit" "security_ou" {
+  name      = "SecurityOU"
+  parent_id = data.aws_organizations_organization.current.roots[0].id # Assigns the OU to the root
+
+  # Optional: Add tags
+  tags = {
+    Environment = "Security"
+  }
+}
+
+# Output the security OU ID
+output "organizational_unit_id_securityou" {
+  value = aws_organizations_organizational_unit.security_ou.id
+}
+
+
+
+# Create the Organizational Unit - WorkloadOU
+resource "aws_organizations_organizational_unit" "workload_ou" {
+  name      = "WorkloadOU"
+  parent_id = data.aws_organizations_organization.current.roots[0].id # Assigns the OU to the root
+
+  # Optional: Add tags
+  tags = {
+    Environment = "Workload"
+  }
+}
+
+# Output the workload OU ID
+output "organizational_unit_id_workloadou" {
+  value = aws_organizations_organizational_unit.workload_ou.id
+}

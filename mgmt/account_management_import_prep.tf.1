@@ -1,0 +1,11 @@
+resource "aws_organizations_account" "management_account" {
+  # Add necessary arguments (e.g., name, email) to match the existing account
+  name  = var.management_account_name
+  email = var.management_account_email # Must be the email associated with the existing management account
+  parent_id = aws_organizations_organizational_unit.governance_ou.id
+}
+
+import {
+  to = aws_organizations_account.management_account
+  id = var.management_account_id
+}
