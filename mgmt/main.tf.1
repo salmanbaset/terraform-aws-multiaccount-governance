@@ -1,0 +1,30 @@
+# Configure the AWS Provider
+# Ensure your credentials have the necessary permissions in the target AWS account
+provider "aws" {
+  profile = var.profile
+  region = var.region # AWS Organizations region
+}
+
+# Create the AWS Organization
+resource "aws_organizations_organization" "myorg" {
+  # The feature_set can be "ALL" for full functionality (including SCPs)
+  # or "CONSOLIDATED_BILLING" for billing features only.
+  feature_set = "ALL"
+
+  # enable trusted service access for SSO, Account Management, CloudTrail, and IAM
+  aws_service_access_principals = [
+    "sso.amazonaws.com",
+    "account.amazonaws.com",
+    "cloudtrail.amazonaws.com",
+    "iam.amazonaws.com"
+  ]
+
+  enabled_policy_types = [
+    "SERVICE_CONTROL_POLICY",
+  ]
+}
+
+# Output the Organization ID
+output "organization_id" {
+  value = aws_organizations_organization.myorg.id
+}

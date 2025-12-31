@@ -1,0 +1,30 @@
+
+resource "aws_organizations_account" "delegated_admin_account" {
+  name  = var.delegated_account_name
+  email = var.delegated_admin_account_email # Must be a unique email address not associated with any other AWS account
+
+  # Specify the Organizational Unit ID of GovernanceOU
+  parent_id = aws_organizations_organizational_unit.governance_ou.id 
+  
+  # Role name created in the new account that the management account can assume
+  role_name = var.rolename_for_mgmt_account
+  
+  # This is a delegated admin account so we do not want to close upon deletion. 
+  # We will manually handle account closure if needed.
+  # close_on_deletion = true
+}
+
+output "delegated_admin_account_id" {
+  value = aws_organizations_account.delegated_admin_account.id
+}
+
+resource "aws_organizations_delegated_administrator" "delegated_admin_for_identity_center" {
+   account_id        = aws_organizations_account.delegated_admin_account.id
+   service_principal = "sso.amazonaws.com"
+}
+
+resource "aws_organizations_delegated_administrator" "delegated_admin_for_aws_organizations" {
+   account_id        = aws_organizations_account.delegated_admin_account.id
+   service_principal = "account.amazonaws.com"
+}
+

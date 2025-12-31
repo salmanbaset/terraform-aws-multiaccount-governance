@@ -1,0 +1,23 @@
+resource "aws_organizations_account" "security_logging_account" {
+  name  = var.security_logging_account_name
+  email = var.security_logging_account_email # Must be a unique email address not associated with any other AWS account
+
+  # Specify the Organizational Unit ID of GovernanceOU
+  parent_id = aws_organizations_organizational_unit.security_ou.id 
+  
+  # Role name created in the new account that the management account can assume
+  role_name = var.rolename_for_mgmt_account
+  
+  # This is a security logging account so we do not want to close upon deletion. 
+  # We will manually handle account closure if needed.
+  # close_on_deletion = true
+}
+
+output "security_logging_account_id" {
+  value = aws_organizations_account.security_logging_account.id
+}
+
+# Register the newly created account as the CloudTrail Delegated Administrator
+resource "aws_cloudtrail_organization_delegated_admin_account" "ct_delegated_admin" {
+  account_id = aws_organizations_account.security_logging_account.id
+}

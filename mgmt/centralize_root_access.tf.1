@@ -1,0 +1,7 @@
+# Enable centralized management of root access for member accounts
+resource "aws_iam_organizations_features" "root_mgmt" {
+  enabled_features = [
+    "RootCredentialsManagement",
+    "RootSessions"
+  ]
+}

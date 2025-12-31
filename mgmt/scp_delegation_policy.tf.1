@@ -1,0 +1,51 @@
+# Use a data source to get the current organization's details, including the management account ID and root ID
+data "aws_organizations_organization" "current_org" {}
+
+# Define the JSON policy document for delegation
+data "aws_iam_policy_document" "organizations_delegation_policy" {
+  statement {
+    effect = "Allow"
+
+    # Specify the member account(s) you want to delegate permissions to
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${aws_organizations_account.delegated_admin_account.id}:root"]
+    }
+
+    sid = "SCPDelegationPolicy"
+
+    # Define the actions the delegated account can perform
+    # full list here: https://docs.aws.amazon.com/organizations/latest/userguide/orgs-policy-delegate.html
+    actions = [
+      "organizations:CreatePolicy",
+      "organizations:DescribePolicy",
+      "organizations:UpdatePolicy",
+      "organizations:DeletePolicy",
+      "organizations:AttachPolicy",
+      "organizations:DetachPolicy",
+      "organizations:ListPolicies",
+      "organizations:DescribeAccount",
+      "organizations:DescribeOrganization",
+      "organizations:ListAccounts",
+      "organizations:ListParents"
+    ]
+
+    # Specify the resources (organization entities) the actions apply to
+    resources = [
+      "${data.aws_organizations_organization.current_org.arn}/*", # Allows management across the whole organization hierarchy
+      "arn:aws:organizations::${var.management_account_id}:root/${data.aws_organizations_organization.current_org.id}/${data.aws_organizations_organization.current_org.roots[0].id}",
+      "arn:aws:organizations::${var.management_account_id}:policy/*/service_control_policy/*"
+    ]
+
+  }
+}
+
+output "iam_policy_json" {
+  description = "The generated IAM policy document in JSON format"
+  value       = data.aws_iam_policy_document.organizations_delegation_policy.json
+}
+
+# Create the resource-based delegation policy using the policy document
+resource "aws_organizations_resource_policy" "delegation" {
+  content = data.aws_iam_policy_document.organizations_delegation_policy.json
+}
