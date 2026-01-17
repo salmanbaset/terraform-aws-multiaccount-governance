@@ -1,7 +1,9 @@
 ## Terraform repo for setting up AWS multi-account governance structure
 
 ### Overview
-The goal of this repo is to only use terraform to create an AWS multi-account governance structure without doing any "ClickOps". The governance structure  utilizes the concept of [delegated administration](https://docs.aws.amazon.com/singlesignon/latest/userguide/delegated-admin.html), service control policies, and a three organization unit (OU) structure.
+The goal of this repo is to only use terraform to create an AWS multi-account governance structure without doing any "ClickOps". The governance structure  utilizes the concept of [delegated administration](https://docs.aws.amazon.com/singlesignon/latest/userguide/delegated-admin.html), service control policies, and a three organization unit top-level (OU) structure.
+
+<img src="images/1.png" alt="Three OU structure" width="400"/>
 
 ### Directory structure
 This is the directory structure of this repo.
@@ -74,7 +76,7 @@ template and fill in the required values
 Once done, `mv s3_for_terraform.tf.1 s3_for_terraform.tf` and `terraform apply ...` for creating an S3 bucket for terraform state file for this account.
 
 #### mgmt-workload
-NOTE: You will use this repository for day to day operations of assigning Identity Center groups and permission sets to AWS Accounts. You will do these operations as an Identity Center user with Administrator permission set assigned to the AWS Management Account.
+NOTE: You will use this repository for day to day operations of assigning Identity Center groups and permission sets to AWS Accounts, as well as creating new AWS Accounts. You will do these operations as an Identity Center user with Administrator permission set assigned to the AWS Management Account.
 
 1. Configure `aws configure --profile mgmt-admin`, and use `aws login --profile mgmt-admin` to login. Ensure that you are logged into browser as Identity Center user created before for the DelegatedAdmin account.
 2. Navigate to the `mgmtadmin` directory.
