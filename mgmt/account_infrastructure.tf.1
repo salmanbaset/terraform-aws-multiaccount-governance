@@ -16,3 +16,8 @@ resource "aws_organizations_account" "infrastructure_account" {
 output "infrastructure_account_id" {
   value = aws_organizations_account.infrastructure_account.id
 }
+
+resource "aws_organizations_delegated_administrator" "delegated_admin_for_cloudformation" {
+   account_id        = aws_organizations_account.infrastructure_account.id
+   service_principal = "member.org.stacksets.cloudformation.amazonaws.com"
+}
