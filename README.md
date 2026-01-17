@@ -28,7 +28,7 @@ Each directory contains a separate Terraform configuration for different aspects
 #### mgmt
 1. Configure `aws configure --profile rootuser`, and use `aws login --profile rootuser` to login. Ensure that you are logged into browser with root user email.
 2. Navigate to the `mgmt` directory.
-3. Create a `variables.tfvars` file based on the provided `variables.tfvars`
+3. Update the empty values in `variables.tfvars` file based on your environment. You can refer to the examples in the file.
 template and fill in the required values
 4. Initialize Terraform: `terraform init`
 5. Review the plan: `terraform plan -var-file="variables.tfvars"`
@@ -53,8 +53,7 @@ NOTE: If you do not want to create CloudTrail and corresponding S3 bucket for sa
 
 1. Configure `aws configure --profile securitylogging-admin`, and use `aws login --profile securitylogging-admin` to login. Ensure that you are logged into browser as Identity Center user created before for the DelegatedAdmin account.
 2. Navigate to the `securitylogging` directory.
-3. Create a `variables.tfvars` file based on the provided `variables.tfvars`
-template and fill in the required values
+3. Update the empty values in `variables.tfvars` file based on your environment. You can refer to the examples in the file.
 4. Initialize Terraform: `terraform init`
 5. Review the plan: `terraform plan -var-file="variables.tfvars"`
 6. Apply the configuration: `terraform apply -var-file="variables.tfvars"`. You will need to uncomment files one at a time in order to apply the configuration.
@@ -67,8 +66,7 @@ NOTE: You will use this account for day to day operations of creating Identity C
 
 1. Configure `aws configure --profile delegatedadmin-admin`, and use `aws login --profile delegatedadmin-admin` to login. Ensure that you are logged into browser as Identity Center user created before for the DelegatedAdmin account.
 2. Navigate to the `delegatedadmin` directory.
-3. Create a `variables.tfvars` file based on the provided `variables.tfvars`
-template and fill in the required values
+3. Update the empty values in `variables.tfvars` file based on your environment. You can refer to the examples in the file.
 4. Initialize Terraform: `terraform init`
 5. Review the plan: `terraform plan -var-file="variables.tfvars"`
 6. Apply the configuration: `terraform apply -var-file="variables.tfvars"`. You will need to uncomment files one at a time in order to apply the configuration.
@@ -80,8 +78,7 @@ NOTE: You will use this repository for day to day operations of assigning Identi
 
 1. Configure `aws configure --profile mgmt-admin`, and use `aws login --profile mgmt-admin` to login. Ensure that you are logged into browser as Identity Center user created before for the DelegatedAdmin account.
 2. Navigate to the `mgmtadmin` directory.
-3. Create a `variables.tfvars` file based on the provided `variables.tfvars`
-template and fill in the required values
+3. Update the empty values in `variables.tfvars` file based on your environment. You can refer to the examples in the file.
 4. Initialize Terraform: `terraform init`
 5. Review the plan: `terraform plan -var-file="variables.tfvars"`
 6. Apply the configuration: `terraform apply -var-file="variables.tfvars"`. You will need to uncomment files one at a time in order to apply the configuration.
