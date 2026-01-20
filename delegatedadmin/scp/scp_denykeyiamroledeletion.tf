@@ -1,6 +1,8 @@
 data "aws_iam_policy_document" "deny_key_iam_role_deletion_policy" {
   statement {
     effect    = "Deny"
+
+    # source https://docs.aws.amazon.com/controltower/latest/controlreference/mandatory-controls.html
     actions   = [
         "iam:AttachRolePolicy",
         "iam:CreateRole",
@@ -14,12 +16,16 @@ data "aws_iam_policy_document" "deny_key_iam_role_deletion_policy" {
         "iam:UpdateRole",
         "iam:UpdateRoleDescription"
     ]
+
+    # security-cspm role is created for CSPM (Prowler). Other roles are created by AWS.
     resources = [
       "arn:aws:iam::*:role/aws-controltower-*",
       "arn:aws:iam::*:role/*AWSControlTower*",
       "arn:aws:iam::*:role/stacksets-exec-*",
-      "arn:aws:iam::*:role/OrganizationAccountAccessRole"
+      "arn:aws:iam::*:role/OrganizationAccountAccessRole",
+      "arn:aws:iam::*:role/security/cspm/security-cspm"
     ]
+
     condition {
       test = "ArnNotLike"
       variable = "aws:PrincipalArn"
