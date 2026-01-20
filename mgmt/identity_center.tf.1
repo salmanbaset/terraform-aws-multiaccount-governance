@@ -62,7 +62,7 @@ resource "aws_ssoadmin_permission_set" "administrator" {
   name             = "Administrator"
   description      = "Provides administrator access to AWS resources"
   instance_arn     = local.identity_store_arn
-  session_duration = "PT1H" # 1 hours session duration (ISO-8601 standard)
+  session_duration = "PT4H" # 4 hours session duration (ISO-8601 standard)
 }
 
 # Attach the AdministratorAccess IAM managed policy to the permission set created above
@@ -81,7 +81,7 @@ resource "aws_ssoadmin_permission_set" "billing" {
   name             = "Billing"
   description      = "Provides billing access to AWS resources"
   instance_arn     = local.identity_store_arn
-  session_duration = "PT2H" # 1 hours session duration (ISO-8601 standard)
+  session_duration = "PT4H" # 2 hours session duration (ISO-8601 standard)
 }
 
 # Attach the Billing IAM managed policy to the permission set created above
@@ -98,7 +98,7 @@ resource "aws_ssoadmin_permission_set" "securityanalyst" {
   name             = "SecurityAnalyst"
   description      = "Provides security analyst access to AWS resources"
   instance_arn     = local.identity_store_arn
-  session_duration = "PT2H" # 1 hours session duration (ISO-8601 standard)
+  session_duration = "PT4H" #  hours session duration (ISO-8601 standard)
 }
 
 # Attach the Security Analyst IAM managed policy to the permission set created above
