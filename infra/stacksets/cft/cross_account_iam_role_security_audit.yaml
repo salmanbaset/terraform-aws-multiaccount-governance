@@ -1,0 +1,66 @@
+## template based on 
+### https://unicrons.cloud/en/2024/10/14/deploy-iam-roles-across-an-aws-organization-as-code/#terraform-module
+### https://raw.githubusercontent.com/prowler-cloud/prowler/refs/heads/master/permissions/templates/cloudformation/prowler-scan-role.yml
+
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  RoleName:
+    Type: String
+    Description: IAM Role Name
+  RoleDescription:
+    Type: String
+    Description: IAM Role Description
+    Default: ""
+  # PolicyName:
+  #   Type: String
+  #   Description: IAM Managed read and write policy name
+  # PolicyDescription:
+  #   Type: String
+  #   Description: IAM Managed Policy Description
+  #   Default: ""
+  IAMPath:
+    Type: String
+    Description: IAM Role and Policy Path
+    Default: "/"
+  TrustedAccount:
+    Type: String
+    Description: AWS trusted account ID
+  TrustedRole:
+    Type: String
+    Description: Allowed IAM Role ARN
+Resources:
+  Role:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: !Ref RoleName
+      Description: !Ref RoleDescription
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS:
+                !Ref TrustedAccount
+            Action:
+              - 'sts:AssumeRole'
+            Condition:
+              ArnLike:
+                'aws:PrincipalArn': !Ref TrustedRole
+      Path: !Ref IAMPath
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/SecurityAudit
+        - arn:aws:iam::aws:policy/job-function/ViewOnlyAccess
+  # RolePolicy:
+  #   Type: AWS::IAM::ManagedPolicy
+  #   Properties:
+  #     ManagedPolicyName: !Ref PolicyName
+  #     Description: !Ref PolicyDescription
+  #     Path: !Ref IAMPath
+  #     PolicyDocument:
+  #       Version: "2012-10-17"
+  #       Statement:
+  #         - Sid: SecurityHubImport
+  #           Effect: Allow
+  #           Action:
+  #             - securityhub:BatchImportFindings
+  #           Resource: '*'
