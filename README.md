@@ -78,7 +78,7 @@ NOTE: You will use this AWS directory and corresponding AWS account for day to d
 Once done, `mv s3_for_terraform.tf.1 s3_for_terraform.tf` and `terraform apply ...` for creating an S3 bucket for terraform state file for this account.
 
 #### mgmt-workload
-NOTE: You will use this repository for day to day operations of assigning Identity Center groups and permission sets to AWS Accounts, as well as creating new AWS Accounts. You will do these operations as an Identity Center user with Administrator permission set assigned to the AWS Management Account.
+NOTE: You will use this repository for day to day operations of assigning Identity Center groups and permission sets to AWS Accounts, as well as creating new AWS Accounts. You will do these operations as an Identity Center user with Administrator permission set assigned to the AWS Management Account. This code will also creaet a S3 bucket for terraform state file for day to day operations, which is separate from the S3 bucket created for the Management Account for storing OU configuration etc.
 
 1. Configure `aws configure --profile mgmt-admin`, and use `aws login --profile mgmt-admin` to login. Ensure that you are logged into browser as Identity Center user created before for the DelegatedAdmin account.
 2. Navigate to the `mgmtadmin` directory.
@@ -86,8 +86,6 @@ NOTE: You will use this repository for day to day operations of assigning Identi
 4. Initialize Terraform: `terraform init`
 5. Review the plan: `terraform plan -var-file="variables.tfvars"`
 6. Apply the configuration: `terraform apply -var-file="variables.tfvars"`. You will need to uncomment files one at a time in order to apply the configuration.
-
-Once done, `mv s3_for_terraform.tf.1 s3_for_terraform.tf` and `terraform apply ...` for creating an S3 bucket for terraform state file for this account.
 
 
 #### infra
