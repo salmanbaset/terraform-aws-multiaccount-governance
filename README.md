@@ -10,6 +10,9 @@ This is the directory structure of this repo.
 
 ```
 ├── delegatedadmin
+├── images
+├── infra
+├── LICENSE
 ├── mgmt
 ├── mgmt-workload
 ├── README.md
@@ -21,7 +24,8 @@ Each directory contains a separate Terraform configuration for different aspects
 - `delegatedadmin` : In the DelegatedAdmin AWS account as an Identity Center user with Administrator permissions, setup Delegated Administration for Identity Center and AWS Organizations and assign Service Control Policies (SCPs) to the Organization Root. Also, setup S3 bucket for storing terraform state file for this account.
 - `securitylogging` : In the SecurityLogging AWS account as an Identity Center user with Administrator permissions, setup Security Logging account with CloudTrail and S3. Also, setup S3 bucket for storing terraform state file for this account.
 - `mgmt-workload` : In the Management Account as an Identity Center user with Administrator permissions, setup AWS accounts under Workload OU and assign Identity Center Permission Sets to Groups for access to Workload accounts. 
-
+- `infra` : In the Infrastructure Account as an Identity Center user with Administrator permissions, setup CloudFormation StackSets for creating an IAM
+role with AWS managed policies of SecurityAudit and ViewOnlyAcces (for Prowler ). Additionally, Github/Gitlab infrastructure is setup in this account. 
 
 ### Setup
 
@@ -62,7 +66,7 @@ Once done, `mv s3_for_terraform.tf.1 s3_for_terraform.tf` and `terraform apply .
 
 
 #### delegatedadmin
-NOTE: You will use this account for day to day operations of creating Identity Center groups and permission sets, and assigning users to groups.
+NOTE: You will use this AWS directory and corresponding AWS account for day to day operations of creating Identity Center groups and permission sets, and assigning users to groups. Additionally, you will use this account for managing service control policies (SCPs).
 
 1. Configure `aws configure --profile delegatedadmin-admin`, and use `aws login --profile delegatedadmin-admin` to login. Ensure that you are logged into browser as Identity Center user created before for the DelegatedAdmin account.
 2. Navigate to the `delegatedadmin` directory.
@@ -84,6 +88,18 @@ NOTE: You will use this repository for day to day operations of assigning Identi
 6. Apply the configuration: `terraform apply -var-file="variables.tfvars"`. You will need to uncomment files one at a time in order to apply the configuration.
 
 Once done, `mv s3_for_terraform.tf.1 s3_for_terraform.tf` and `terraform apply ...` for creating an S3 bucket for terraform state file for this account.
+
+
+#### infra
+NOTE: You will use this repository and corresponding AWS Infrastructure account for managing delegated administration of CloudFormation. The code deploys Stacksets across all accounts except for the management account, and creates a S3 bucket for storing the Terraform state file.
+
+1. Configure `aws configure --profile infra-admin`, and use `aws login --profile infra-admin` to login. Ensure that you are logged into browser as Identity Center user created before for the Infrastructure account.
+2. Navigate to the `infra` directory.
+3. Update the empty values in `variables.tfvars` file based on your environment. You can refer to the examples in the file.
+4. Initialize Terraform: `terraform init`
+5. Review the plan: `terraform plan -var-file="variables.tfvars"`
+6. Apply the configuration: `terraform apply -var-file="variables.tfvars"`. You will need to uncomment files one at a time in order to apply the configuration.
+
 
 ## License
 Copyright (c) 2025-2026 Salman Baset
