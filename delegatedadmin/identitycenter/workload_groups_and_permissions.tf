@@ -34,6 +34,8 @@ resource "aws_ssoadmin_managed_policy_attachment" "workloadadmin_policy_attach" 
   instance_arn       = local.identity_store_arn
   permission_set_arn = aws_ssoadmin_permission_set.workload_administrator.arn
   # The ARN for the built-in AdministratorAccess policy
+
+  # checkov:skip=CKV_AWS_274:The AdministratorAccess policy is required for admin access
   managed_policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 

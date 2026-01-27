@@ -39,6 +39,13 @@ resource "aws_s3_bucket_lifecycle_configuration" "terraform_bucket_lifecycle" {
       noncurrent_days           = 2
       newer_noncurrent_versions = 2
     }
+
+    # remove incomplete multipart uploads after 1 day. There should not be any
+    # multipart uploads for Terraform state files, but just in case as a
+    # safety measure.
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 1
+    }
   }
 }
 
