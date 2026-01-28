@@ -1,0 +1,22 @@
+# (LOW): Bucket has logging disabled
+# AVD-AWS-89
+
+# (HIGH): Bucket does not encrypt data with a customer managed key.
+# Buckets are encrypted with AWS managed keys, not via customer managed keys in order to save costs.
+# AVD-AWS-132
+
+
+package trivy
+
+import rego.v1
+
+allowed_checks := {
+    "AVD-AWS-0089",
+    "AVD-AWS-0132"
+}
+
+default ignore := false
+
+ignore if is_check_allowed
+
+is_check_allowed if input.AVDID in allowed_checks

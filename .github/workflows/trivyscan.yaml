@@ -1,0 +1,71 @@
+name: Trivy Terraform Scan
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  trivy-scans:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        directory:
+          - infra
+          - mgmt
+          - mgmt-workload
+          - delegatedadmin
+          - securitylogging
+
+    permissions:
+      contents: read          # Required to checkout and read repo files
+      security-events: write  # Required to upload SARIF files to Security tab
+ 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy IaC for ${{ matrix.directory }} (SARIF generation)
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          scan-type: 'config'
+          scan-ref: '${{ matrix.directory }}'
+          hide-progress: false
+          format: 'sarif'
+          output: 'trivy-results-${{ matrix.directory }}.sarif'
+          exit-code: '0'
+          limit-severities-for-sarif: true
+          ignore-policy: '${{ matrix.directory }}/.trivyignore_rego'
+
+      - name: Publish Trivy Output to Github Summary
+        run: |
+          if [[ -s trivy-results-${{ matrix.directory }}.sarif ]]; then
+            echo '```terraform ${{ matrix.directory }}' >> $GITHUB_STEP_SUMMARY
+            cat trivy-results-${{ matrix.directory }}.sarif >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+
+
+      - name: Fail build on High/Critical Vulnerabilities for ${{ matrix.directory }}
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          scan-type: 'config'
+          scan-ref: '${{ matrix.directory }}'
+          format: 'sarif'
+          output: 'trivy-results-${{ matrix.directory }}.sarif'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1'
+          limit-severities-for-sarif: true
+          ignore-policy: '${{ matrix.directory }}/.trivyignore_rego'
+          # Optional: skip setup in the second run if Trivy is already installed/cached
+          skip-setup-trivy: true
+
+
+      ## Upload SARIF to GitHub Security tab (optional) with the appropriate GitHub license level or a public repository
+      - name: Upload Trivy scan results to GitHub Security tab
+        if: always()  # Enable as this repository is public
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'trivy-results-${{ matrix.directory }}.sarif'
+

@@ -1,0 +1,32 @@
+# (LOW): Bucket has logging disabled
+# AVD-AWS-89
+
+# (HIGH): Bucket does not encrypt data with a customer managed key.
+# Buckets are encrypted with AWS managed keys, not via customer managed keys in order to save costs.
+# AVD-AWS-132
+
+
+# (HIGH) CloudTrail should use Customer managed keys to encrypt the logs
+# CloudTrail is using AWS managed keys to encrypt logs to save costs.
+# AVD-AWS-0015
+
+
+# (LOW) CloudTrail logs should be stored in S3 and also sent to CloudWatch Logs
+# CloudTrail is not configured to send logs to CloudWatch Logs to save costs.
+# AVD-AWS-0162
+
+package trivy
+
+import rego.v1
+
+allowed_checks := {
+		"AVD-AWS-0015",
+    "AVD-AWS-0089",
+    "AVD-AWS-0132"
+}
+
+default ignore := false
+
+ignore if is_check_allowed
+
+is_check_allowed if input.AVDID in allowed_checks
