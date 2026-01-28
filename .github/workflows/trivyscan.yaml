@@ -64,7 +64,7 @@ jobs:
 
       ## Upload SARIF to GitHub Security tab (optional) with the appropriate GitHub license level or a public repository
       - name: Upload Trivy scan results to GitHub Security tab
-        if: false  # Disable for now as it requires GitHub Advanced Security or a public repository
+        if: always()  # Enable as this repository is public
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: 'trivy-results-${{ matrix.directory }}.sarif'
