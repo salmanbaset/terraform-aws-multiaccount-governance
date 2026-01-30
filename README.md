@@ -32,15 +32,14 @@ role with AWS managed policies of SecurityAudit and ViewOnlyAcces (for Prowler )
 #### mgmt
 1. Configure `aws configure --profile rootuser`, and use `aws login --profile rootuser` to login. Ensure that you are logged into browser with root user email.
 2. Navigate to the `mgmt` directory.
-3. Update the empty values in `variables.tfvars` file based on your environment. You can refer to the examples in the file.
-template and fill in the required values
+3. Update the empty values in `variables.tfvars` file based on your environment. Refer to the examples in the file and fill in the required values.
 4. Initialize Terraform: `terraform init`
 5. Review the plan: `terraform plan -var-file="variables.tfvars"`
 6. Apply the configuration: `terraform apply -var-file="variables.tfvars"`. You will need to uncomment files one at a time in order to apply the configuration.
 
-NOTE that the files in this directory have `.tf.1` extension. Since this is the "Management Account", this is purposefully done so that you can apply these terraform files one at a time and observe the order of operations when staring from an AWS account which has no resources inside it.
+NOTE that the files in this directory have `.tf.1` extension. Since this is the "Management Account", this is purposefully done so that you can apply these terraform files one at a time and observe the order of operations when starting from an AWS account which has no resources inside it.
 
-Please change the file extenstions to `.tf` in the following order and do `terraform plan ...` and `terraform apply ...`
+Please change the file extensions to `.tf` in the following order and do `terraform plan ...` and `terraform apply ...`
 1. `mv main.tf.1 main.tf ; mv centralize_root_access.tf.1`
 2. `mv ou.tf.1 ou.tf`
 3. `mv account_delegated_admin.tf.1 account_delegated_admin.tf`
@@ -62,7 +61,7 @@ NOTE: If you do not want to create CloudTrail and corresponding S3 bucket for sa
 5. Review the plan: `terraform plan -var-file="variables.tfvars"`
 6. Apply the configuration: `terraform apply -var-file="variables.tfvars"`. You will need to uncomment files one at a time in order to apply the configuration.
 
-Once done, `mv s3_for_terraform.tf.1 s3_for_terraform.tf` and `terraform apply ...` for creating an S3 bucket for terraform state file for this account.
+Run `terraform apply -var-file="variables.tfvars"` to create the S3 bucket for the Terraform state file for this account.
 
 
 #### delegatedadmin
@@ -75,13 +74,13 @@ NOTE: You will use this AWS directory and corresponding AWS account for day to d
 5. Review the plan: `terraform plan -var-file="variables.tfvars"`
 6. Apply the configuration: `terraform apply -var-file="variables.tfvars"`. You will need to uncomment files one at a time in order to apply the configuration.
 
-Once done, `mv s3_for_terraform.tf.1 s3_for_terraform.tf` and `terraform apply ...` for creating an S3 bucket for terraform state file for this account.
+Run `terraform apply -var-file="variables.tfvars"` to create the S3 bucket for the Terraform state file for this account.
 
 #### mgmt-workload
-NOTE: You will use this repository for day to day operations of assigning Identity Center groups and permission sets to AWS Accounts, as well as creating new AWS Accounts. You will do these operations as an Identity Center user with Administrator permission set assigned to the AWS Management Account. This code will also creaet a S3 bucket for terraform state file for day to day operations, which is separate from the S3 bucket created for the Management Account for storing OU configuration etc.
+NOTE: You will use this repository for day to day operations of assigning Identity Center groups and permission sets to AWS Accounts, as well as creating new AWS Accounts. You will do these operations as an Identity Center user with Administrator permission set assigned to the AWS Management Account. This code will also create a S3 bucket for terraform state file for day to day operations, which is separate from the S3 bucket created for the Management Account for storing OU configuration etc.
 
 1. Configure `aws configure --profile mgmt-admin`, and use `aws login --profile mgmt-admin` to login. Ensure that you are logged into browser as Identity Center user created before for the DelegatedAdmin account.
-2. Navigate to the `mgmtadmin` directory.
+2. Navigate to the `mgmt-workload` directory.
 3. Update the empty values in `variables.tfvars` file based on your environment. You can refer to the examples in the file.
 4. Initialize Terraform: `terraform init`
 5. Review the plan: `terraform plan -var-file="variables.tfvars"`

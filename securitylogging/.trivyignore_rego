@@ -21,7 +21,6 @@ import rego.v1
 
 allowed_checks := {
 		"AVD-AWS-0015",
-    "AVD-AWS-0089",
     "AVD-AWS-0132"
 }
 
