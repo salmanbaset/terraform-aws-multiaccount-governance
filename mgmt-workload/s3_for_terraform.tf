@@ -7,10 +7,10 @@ data "aws_caller_identity" "current" {}
 
 # 1. Create S3 bucket to store Terraform state file for this account
 resource "aws_s3_bucket" "terraform_bucket" {
-  bucket = "terraform-bucket-mgmt-admin-${data.aws_caller_identity.current.account_id}" # Ensure globally unique bucket name
+  bucket = "terraform-bucket-mgmt-workload-${data.aws_caller_identity.current.account_id}" # Ensure globally unique bucket name
 
-  # force_destroy = false is recommended for production to prevent accidental data loss. Set to true for testing purposes.
-  force_destroy = true 
+  # force_destroy = false to prevent accidental data loss.
+  force_destroy = false
 
   tags = {
     Name        = "Terraform State Bucket for Administrator of Management Account"
