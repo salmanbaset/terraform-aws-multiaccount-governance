@@ -98,3 +98,13 @@ variable "user1_admin1_email" {
   type        = string
   default     = ""
 }
+
+
+###########################################
+# Stackset variables
+###########################################
+variable "trusted_role_arn_in_infra" {
+  description = "The trusted role ARN in infra account that can assume this role. Used for CSPM (Prowler)"
+  type        = string
+  default  = ""
+}
