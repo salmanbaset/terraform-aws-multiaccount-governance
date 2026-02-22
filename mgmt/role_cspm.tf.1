@@ -1,0 +1,32 @@
+# mgmt/cspm_role.tf
+data "aws_iam_policy_document" "cspm_trust" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "AWS"
+      identifiers = [aws_organizations_account.infrastructure_account.id]
+    }
+    condition {
+      test     = "ArnLike"
+      variable = "aws:PrincipalArn"
+      values   = [var.trusted_role_arn_in_infra]
+    }
+  }
+}
+
+resource "aws_iam_role" "security_cspm" {
+  name               = "security-cspm"
+  path               = "/security/cspm/"
+  assume_role_policy = data.aws_iam_policy_document.cspm_trust.json
+}
+
+resource "aws_iam_role_policy_attachment" "security_audit" {
+  role       = aws_iam_role.security_cspm.name
+  policy_arn = "arn:aws:iam::aws:policy/SecurityAudit"
+}
+
+resource "aws_iam_role_policy_attachment" "view_only" {
+  role       = aws_iam_role.security_cspm.name
+  policy_arn = "arn:aws:iam::aws:policy/job-function/ViewOnlyAccess"
+}
