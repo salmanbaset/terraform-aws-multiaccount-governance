@@ -40,3 +40,8 @@ security_logging_account_name = "SecurityLoggingAccount"
 
 # User1 Admin1 email address
 user1_admin1_email = ""  # ADD EMAIL FOR FIRST USER FOR IDENTITY CENTER, e.g., awsusers+user1admin1@acme.com
+
+###############################################
+# Trusted Role ARN in Infra account variable. 
+###############################################
+trusted_role_arn_in_infra   = ""  # ADD YOUR INFRA ENVIRONMENT ADMINISTRATOR USER ROLE ARN SO THAT IT CAN ASSUME security-cspm ROLE FROM CSPM (PROWLER) IN ALL ACCOUNTS FROM LOCAL MACHINE
